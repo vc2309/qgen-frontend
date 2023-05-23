@@ -1,11 +1,11 @@
 <template>
-  <div class="container mx-auto p-4 bg-gradient-to-tr from-gray-900 to-blue-900 text-white h-screen">
+  <div class="container mx-auto p-4 text-white h-screen">
     <div class="flex justify-between h-5/6">
       <div class="w-1/2 mx-4 bg-gray-800 rounded-lg shadow-lg relative top-11">
-        <TextboxInput ref="textInput"/>
+        <TextboxInput ref="textInput" :currConversation="currConversation"/>
       </div>
       <div class="w-1/2 mx-4 bg-gray-800 rounded-lg shadow-lg relative top-11">
-        <OutputContainer ref="outputContainer"></OutputContainer>
+        <OutputContainer ref="outputContainer" :currConversation="currConversation"></OutputContainer>
       </div>
     </div>
   </div>
@@ -27,7 +27,9 @@ export default {
     return {
       darkMode: false,
       input: '',
-      output: ''
+      output: '',
+      totalConvos : 1,
+      currConversation : 0
     }
   },
   mounted () {
@@ -36,9 +38,18 @@ export default {
         ans : '',
         cnt : 'data'
       }).then(console.log("warmed up")); 
+    
+    emitter.on("newConversation", this.onNewConversation);
+    emitter.on("nextConversation", this.onNextConversation);
+    emitter.on("prevConversation", this.onPrevConversation);
+    emitter.on("deleteConversation", this.onDeleteConversation);
   },
   beforeUnmount() {
-    emitter.off("submit", this.onSubmit)
+    emitter.off("submit", this.onSubmit);
+    emitter.off("newConversation", this.onNewConversation);
+    emitter.off("nextConversation", this.onNextConversation);
+    emitter.on("deleteConversation", this.onDeleteConversation);
+
   },
   methods: {
     onSubmit(data) {
@@ -47,6 +58,41 @@ export default {
         console.log(response)
         emitter.emit("questionGenerated", response.data.questions[0])
       }).catch(error => {console.error();})
+    },
+
+    onNewConversation() {
+      if (this.totalConvos<=5) {
+        this.totalConvos++;
+        this.$refs.outputContainer.startNewConversation();
+        this.$refs.textInput.startNewConversation();
+        this.currConversation++;
+      }
+      else{
+        alert("A maximum of 5 articles are permitted!");
+      }
+    },
+
+    onNextConversation() {
+      if (this.currConversation < this.totalConvos-1){
+        this.currConversation++;
+      }
+    },
+
+    onPrevConversation() {
+      if (this.currConversation > 0){
+        this.currConversation--;
+      }
+    },
+
+    onDeleteConversation() {
+      if (this.totalConvos>1){
+        if (this.currConversation == this.totalConvos-1){
+          this.currConversation--;
+        }
+        this.$refs.outputContainer.deleteCurrentConversation();
+        this.$refs.textInput.deleteCurrentConversation();
+        this.totalConvos--;
+      }
     }
   }
 }

@@ -1,18 +1,23 @@
 <template>
-  <div class="h-screen ">
-    <header class="sticky py-1 border-gray-800 bg-gray-900"><nav class="font-Cabin px-10 text-left text-blue-400 font-bold text-2xl">QuestionGenerator</nav></header>
-    <QuestionGenerator />
+  <div class="h-screen bg-gradient-to-tr from-gray-900 to-blue-900 overflow-hidden">
+    <header class="sticky py-1 border-gray-800 bg-gray-900 "><nav class="font-Cabin px-10 text-left text-cyan-600 font-thin text-2xl">QuestionGenerator</nav></header>
+    <div class="flex flex-row h-full">
+    <ToolbarContainer/>
+    <QuestionGenerator class="my-auto"/>
+    </div>
 </div>
 </template>
 
 <script>
 import QuestionGenerator from './components/QuestionGenerator.vue'
+import ToolbarContainer from './components/ToolbarContainer.vue';
 
 export default {
   name: 'App',
   components: {
-    QuestionGenerator
-  }
+    QuestionGenerator,
+    ToolbarContainer
+}
 }
 </script>
 
