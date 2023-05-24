@@ -47,6 +47,7 @@ export default {
     emitter.on("prevConversation", this.onPrevConversation);
     emitter.on("deleteConversation", this.onDeleteConversation);
     emitter.on("toggleBatchMode", this.toggleBatchMode);
+    emitter.on("exportToJson", this.exportToJson);
   },
   beforeUnmount() {
     emitter.off("submit", this.onSubmit);
@@ -54,10 +55,12 @@ export default {
     emitter.off("nextConversation", this.onNextConversation);
     emitter.off("deleteConversation", this.onDeleteConversation);
     emitter.off("toggleBatchMode", this.toggleBatchMode);
+    emitter.off("exportToJson", this.exportToJson);
   },
   methods: {
     onSubmit(data) {
       data['batch'] = this.batchMode;
+      const conversationIdx = this.currConversation;
       if (data.cnt.length > 2500){
         alert("Maximum article length is 2500 characters!")
         return;
@@ -69,11 +72,9 @@ export default {
       }
       this.loading = true;
       axios.post("https://vbfsgcdwqd.execute-api.eu-west-2.amazonaws.com/Prod/generate_question/", data).then(response => {
-        console.log("received");
-        console.log(response);
         this.loading = false;
         response.data.questions.forEach(q => {
-          emitter.emit("questionGenerated", q);          
+          emitter.emit("questionGenerated", {question : q, conversationIdx : conversationIdx});          
         });
       }).catch(error => {console.error(error);})
     },
@@ -115,6 +116,33 @@ export default {
 
     toggleBatchMode() {
       this.batchMode = !this.batchMode;
+    },
+
+    exportToJson(){
+      const contexts = this.$refs.textInput.input;
+      const questions = this.$refs.outputContainer.questions;
+
+      let docs = [];
+      for (let i = 0; i<this.totalConvos; i++){
+        if (contexts[i].length >0 && questions[i][0].length>0){
+          docs.push(
+            {
+              context : contexts[i],
+              questions : questions[i]
+            }
+          )
+        }
+      }
+      const jsonData = JSON.stringify(docs, null, 2);
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'question_generator_results.json';
+      a.click();
+
+      URL.revokeObjectURL(url);
     }
   }
 }

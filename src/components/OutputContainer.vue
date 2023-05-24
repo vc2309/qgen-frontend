@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     onInput (data) {
-      this.questions[this.currConversation].push(data);
+      this.questions[data.conversationIdx].push(data.question);
     },
     scrollToBottom() {
       const container = this.$refs.scrollContainer;
