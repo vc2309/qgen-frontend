@@ -1,8 +1,9 @@
 <template>
+  <title>Vishnu's Question Generator</title>
   <div class="h-screen bg-gradient-to-tr from-gray-900 to-blue-900 overflow-hidden">
     <header class="sticky py-1 border-gray-800 bg-gray-900 "><nav class="font-Cabin px-10 text-left text-cyan-600 font-thin text-2xl">QuestionGenerator</nav></header>
     <div class="flex flex-row h-full">
-    <ToolbarContainer/>
+    <ToolbarContainer class="mt-14"/>
     <QuestionGenerator class="my-auto"/>
     </div>
 </div>

@@ -17,26 +17,19 @@ export default {
   name: 'OutputContainer',
   components: {
   },
-  props: ['currConversation'],
+  props: ['currConversation', 'loading'],
   data () {
     return {
-      questions : [[]],
-      loading : false
+      questions : [[]]
     }
   },
   mounted () {
     emitter.on("questionGenerated", (data) => {
-    this.loading = false;
     this.onInput(data);
-    });
-
-    emitter.on("submit", () => {
-      this.loading = true;
     });
 
   },
   beforeUnmount() {
-    emitter.off("submit");
     emitter.off("questionGenerated");
 
   },
