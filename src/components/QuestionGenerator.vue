@@ -61,6 +61,10 @@ export default {
     onSubmit(data) {
       data['batch'] = this.batchMode;
       const conversationIdx = this.currConversation;
+      if(data.cnt.length < 30){
+        alert("The article must be at least 30 characters!")
+        return;
+      }
       if (data.cnt.length > 2500) {
         alert("Maximum article length is 2500 characters!")
         return;
