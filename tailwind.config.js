@@ -11,7 +11,9 @@ module.exports = {
     },
     fontFamily: {
       Roboto: ["Roboto, sans-serif"],
-      Cabin: ["Cabin, sans-serif"]
+      Cabin: ["Cabin, sans-serif"],
+      RobotoFlex: ['"Roboto Flex"', "sans-serif"]
+
     },
     container: {
       padding: "2rem",
